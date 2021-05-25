@@ -1,0 +1,45 @@
+version: '3'
+services:
+  kg-api:
+    image: tbfy/kg-api:0.3
+    container_name: kg-api
+    ports:
+     - "8082:7777"
+    env_file:
+     - kg.env
+    depends_on:
+     - fuseki
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "search-log"
+  fuseki:
+    image: stain/jena-fuseki:3.13.1
+    container_name: fuseki
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./data/fuseki:/fuseki
+    env_file:
+      - fuseki.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "fuseki-log"
+  yasgui:
+    image: erikap/yasgui
+    container_name: yasgui
+    ports:
+      - "3040:80"
+    env_file:
+      - yasgui.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "yasgui-log"
